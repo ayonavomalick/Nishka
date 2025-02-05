@@ -33,7 +33,7 @@ page 50011 "NIM G/L Master"
                 }
                 field(incomeBalance; Rec."Income/Balance")
                 {
-                    Caption = 'Income/Balance';
+                    Caption = 'Income';
                 }
             }
         }
