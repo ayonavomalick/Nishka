@@ -1,16 +1,16 @@
-page 50011 "NIM G/L Master"
+page 50013 "NIM Location"
 {
     APIVersion = 'v2.0';
     APIPublisher = 'demo';
     APIGroup = 'Nisika';
-    EntityCaption = 'G/L Master';
-    EntitySetCaption = 'G/L Master';
+    EntityCaption = 'Location';
+    EntitySetCaption = 'Location';
     DelayedInsert = true;
-    ODataKeyFields = "No.";
+    ODataKeyFields = Code;
     PageType = API;
-    EntityName = 'GLMaster';
-    EntitySetName = 'GLMaster';
-    SourceTable = "G/L Account";
+    EntityName = 'Location';
+    EntitySetName = 'Location';
+    SourceTable = Location;
     Extensible = true;
 
     layout
@@ -22,18 +22,13 @@ page 50011 "NIM G/L Master"
                 Caption = 'GroupName';
                 
 
-                
-                field(no; Rec."No.")
+                field("code"; Rec."Code")
                 {
-                    Caption = 'No.';
+                    Caption = 'Code';
                 }
                 field(name; Rec.Name)
                 {
                     Caption = 'Name';
-                }
-                field(incomeBalance; Rec."Income/Balance")
-                {
-                    Caption = 'Income/Balance';
                 }
             }
         }
