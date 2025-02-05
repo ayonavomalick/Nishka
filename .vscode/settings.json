@@ -1,0 +1,18 @@
+{
+    "al.enableCodeAnalysis": true,
+    "al.backgroundCodeAnalysis": true,
+    "al.enableCodeActions": true,
+   "al.codeAnalyzers": [
+
+        
+       "${CodeCop}",
+       "${PerTenantExtensionCop}",
+       "${UICop}",
+   ],
+  // "CRS.ObjectNamePrefix": "NIM",
+   "CRS.FileNamePattern": "<ObjectTypeShort><ObjectId><ObjectNameShort>.al",
+   "CRS.FileNamePatternExtensions": "<ObjectTypeShort><BaseId>-Ext<ObjectId>.<ObjectNameShort>.al",
+   "CRS.FileNamePatternPageCustomizations": "<ObjectTypeShort><BaseId>-PageCust.<ObjectNameShort>.al",
+   "CRS.OnSaveAlFileAction": "Rename"
+
+}

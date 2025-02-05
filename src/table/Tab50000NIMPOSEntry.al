@@ -1,0 +1,276 @@
+table 50000 "NIMPOSEntry"
+{
+    DataClassification = CustomerContent;
+
+    fields
+    {
+        field(1; "Entry No."; Integer)
+        {
+            DataClassification = CustomerContent;
+            autoincrement = true;
+
+        }
+        field(2; "Entry Type"; ENUM NIMPOSEntryType)
+        {
+            Caption = 'Entry Type';
+            DataClassification = CustomerContent;
+        }
+        field(3; "Posting Date"; Date)
+        {
+            Caption = 'Posting Date';
+            DataClassification = CustomerContent;
+        }
+        field(4; "Document No."; code[20])
+        {
+            Caption = 'Document No.';
+            DataClassification = CustomerContent;
+        }
+        field(5; "Document Type"; Enum "Gen. Journal Document Type")
+        {
+            Caption = 'Document Type';
+            DataClassification = CustomerContent;
+        }
+        field(6; "Account Type"; Enum "Gen. Journal Account Type")
+        {
+            Caption = 'Account Type';
+
+        }
+        field(7; "Account No."; Code[20])
+        {
+            Caption = 'Account No.';
+            TableRelation = if ("Account Type" = const("G/L Account")) "G/L Account" where("Account Type" = const(Posting),
+                                                                                          Blocked = const(false))
+            else
+            if ("Account Type" = const(Customer)) Customer
+            else
+            if ("Account Type" = const(Vendor)) Vendor
+            else
+            if ("Account Type" = const("Bank Account")) "Bank Account"
+            else
+            if ("Account Type" = const("Fixed Asset")) "Fixed Asset"
+            else
+            if ("Account Type" = const("IC Partner")) "IC Partner"
+            else
+            if ("Account Type" = const("Allocation Account")) "Allocation Account"
+            else
+            if ("Account Type" = const(Employee)) Employee;
+
+            trigger OnValidate()
+            var
+                customer: Record customer;
+                Vendor: Record Vendor;
+                GLAccount: Record "G/L Account";
+                BankAccount: Record "Bank Account";
+                FixedAsset: Record "Fixed Asset";
+                ICPartner: Record "IC Partner";
+                AllocationAccount: Record "Allocation Account";
+                Employee: Record Employee;
+
+            begin
+                case "Account Type" of
+                    "Account Type"::"G/L Account":
+                        begin
+                            GLAccount.Reset();
+                            GLAccount.SetRange("Account Type", GLAccount."Account Type"::Posting);
+                            GLAccount.SetRange("No.", "Account No.");
+                            GLAccount.SetRange(Blocked, false);
+                            if not GLAccount.IsEmpty then
+                                if GLAccount.FindFirst() then
+                                    Description := GLAccount.Name;
+                        end;
+                    "Account Type"::Customer:
+                        begin
+                            customer.Reset();
+                            customer.SetRange("No.");
+                            if not customer.IsEmpty then
+                                if customer.FindFirst() then begin
+                                    customer.CheckBlockedCustOnJnls(customer, "Document Type", false);
+                                    Description := customer.Name;
+                                end;
+
+                        end;
+                    "Account Type"::Vendor:
+                        begin
+                            Vendor.Reset();
+                            if Vendor.Get("Account No.") then begin
+                                Vendor.CheckBlockedVendOnJnls(Vendor, "Document Type", false);
+                                Description := Vendor.Name;
+                            end;
+
+                        end;
+                    "Account Type"::Employee:
+                        begin
+                            Employee.Reset();
+                            if Employee.Get("Account No.") then begin
+                                Employee.CheckBlockedEmployeeOnJnls(false);
+                                Description := Employee."First Name";
+                            end;
+                        end;
+                    "Account Type"::"Bank Account":
+                        begin
+                            BankAccount.Reset();
+                            if BankAccount.Get("Account No.") then begin
+                                BankAccount.TestField(Blocked, false);
+                                Description := BankAccount.Name;
+                            end;
+
+
+                        end;
+                    "Account Type"::"Fixed Asset":
+                        begin
+                            FixedAsset.Reset();
+                            if FixedAsset.Get("Account No.") then begin
+                                FixedAsset.TestField(Blocked, false);
+                                FixedAsset.TestField(Inactive, false);
+                                FixedAsset.TestField("Budgeted Asset", false);
+                                Description := FixedAsset.Description;
+                            end;
+                        end;
+                    "Account Type"::"IC Partner":
+                        begin
+                            ICPartner.Reset();
+                            if ICPartner.Get("Account No.") then begin
+                                ICPartner.CheckICPartner();
+                                Description := ICPartner.Name;
+                            end;
+
+                        end;
+                    "Account Type"::"Allocation Account":
+                        if AllocationAccount.Get("Account No.") then
+                            Description := AllocationAccount.Name;
+
+
+                end;
+            end;
+
+        }
+        field(8; "Global Dimension 1"; Code[20])
+        {
+            CaptionClass = '1,2,1';
+            Caption = 'Shortcut Dimension 1 Code';
+            TableRelation = "Dimension Value".Code where("Global Dimension No." = const(1),
+                                                          Blocked = const(false));
+
+        }
+        field(9; "Global Dimension 2"; code[20])
+        {
+            CaptionClass = '1,2,1';
+            Caption = 'Shortcut Dimension 1 Code';
+            TableRelation = "Dimension Value".Code where("Global Dimension No." = const(2),
+                                                          Blocked = const(false));
+        }
+        field(10; "Purpose"; code[10])
+        {
+            Caption = 'Purpose';
+            DataClassification = CustomerContent;
+        }
+        field(11; "Currency"; code[10])
+        {
+            Caption = 'Currency';
+            DataClassification = CustomerContent;
+        }
+        field(12; "AmountCur"; Decimal)
+        {
+            Caption = 'AmountCur';
+            DataClassification = CustomerContent;
+        }
+        field(14; "AmountMST"; Decimal)
+        {
+            Caption = 'AmountMST';
+            DataClassification = CustomerContent;
+        }
+
+
+        field(17; Description; Text[100])
+        {
+            Caption = 'Description';
+        }
+
+        field(18; "Shortcut Dimension 3"; code[20])
+        {
+
+
+            CaptionClass = '1,2,3';
+            TableRelation = "Dimension Value".Code where("Global Dimension No." = const(3),
+                                                                  "Dimension Value Type" = const(Standard),
+                                                                  Blocked = const(false));
+        }
+        field(19; "Shortcut Dimension 4"; code[20])
+        {
+            CaptionClass = '1,2,4';
+            TableRelation = "Dimension Value".Code where("Global Dimension No." = const(4),
+                                                                  "Dimension Value Type" = const(Standard),
+                                                                  Blocked = const(false));
+        }
+
+        field(21; "Reference Document No."; code[20])
+        {
+            DataClassification = CustomerContent;
+            caption = 'Reference Document No.';
+
+
+        }
+        field(22; "Reference Line No."; integer)
+        {
+            DataClassification = CustomerContent;
+            caption = 'Reference Line No.';
+
+
+        }
+        field(23; "Error Info"; Text[200])
+        {
+            DataClassification = CustomerContent;
+            caption = 'Error Info';
+
+
+        }
+        field(24; "Shortcut Dimension 5"; code[20])
+        {
+            CaptionClass = '1,2,5';
+            TableRelation = "Dimension Value".Code where("Global Dimension No." = const(5),
+                                                                  "Dimension Value Type" = const(Standard),
+                                                                  Blocked = const(false));
+        }
+        field(25; "Shortcut Dimension 6"; code[20])
+        {
+            CaptionClass = '1,2,6';
+            TableRelation = "Dimension Value".Code where("Global Dimension No." = const(6),
+                                                                  "Dimension Value Type" = const(Standard),
+                                                                  Blocked = const(false));
+        }
+        field(26; "Shortcut Dimension 7"; code[20])
+        {
+            CaptionClass = '1,2,7';
+            TableRelation = "Dimension Value".Code where("Global Dimension No." = const(7),
+                                                                  "Dimension Value Type" = const(Standard),
+                                                                  Blocked = const(false));
+        }
+        field(27; "Shortcut Dimension 8"; code[20])
+        {
+            CaptionClass = '1,2,8';
+            TableRelation = "Dimension Value".Code where("Global Dimension No." = const(8),
+                                                                  "Dimension Value Type" = const(Standard),
+                                                                  Blocked = const(false));
+        }
+        field(28; "No. Of Lines"; integer)
+        {
+            DataClassification = CustomerContent;
+            caption = 'No. Of Lines';
+
+
+        }
+
+    }
+
+    keys
+    {
+        key(PK; "Entry No.")
+        {
+            Clustered = true;
+        }
+        key(SK1; "Reference Document No.", "Reference Line No.")
+        {
+
+        }
+    }
+}
