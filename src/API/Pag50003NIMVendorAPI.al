@@ -20,22 +20,7 @@ page 50003 "NIM Vendor API"
             group(GroupName)
             {
                 Caption = 'GroupName';
-                // field(No; Rec."No.")
-                // {
 
-                // }
-                // field(Name; Rec.Name)
-                // {
-
-                // }
-                // field(VendorPostingGroup; Rec."Vendor Posting Group")
-                // {
-
-                // }
-                // field(VATRegistrationNo; Rec."VAT Registration No.")
-                // {
-
-                // }
                 field(no; Rec."No.")
                 {
                     Caption = 'No.';
@@ -55,6 +40,10 @@ page 50003 "NIM Vendor API"
                 field(vendorType; Rec."Vendor Type")
                 {
                     Caption = 'Vendor Type';
+                }
+                field(genBusPostingGroup; Rec."Gen. Bus. Posting Group")
+                {
+                    Caption = 'Gen. Bus. Posting Group';
                 }
             }
         }

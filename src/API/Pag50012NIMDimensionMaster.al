@@ -30,10 +30,14 @@ page 50012 "NIM Dimension Master"
                 {
                     Caption = 'Code';
                 }
-                field(name; Rec.Name)
+                field(description; Rec.Description)
+                {
+                    Caption = 'Description';
+                }
+                /*field(name; Rec.Name)
                 {
                     Caption = 'Name';
-                }
+                }*/
                 field(globalDimensionNo; Rec."Global Dimension No.")
                 {
                     Caption = 'Global Dimension No.';

@@ -35,6 +35,10 @@ page 50011 "NIM G/L Master"
                 {
                     Caption = 'Income/Balance';
                 }
+                field(directPosting; Rec."Direct Posting")
+                {
+                    Caption = 'Direct Posting';
+                }
             }
         }
     }

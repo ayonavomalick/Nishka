@@ -45,6 +45,10 @@ page 50002 "NIM Customer"
                 {
                     Caption = 'Customer Type';
                 }
+                field(genBusPostingGroup; Rec."Gen. Bus. Posting Group")
+                {
+                    Caption = 'Gen. Bus. Posting Group';
+                }
             }
         }
     }
