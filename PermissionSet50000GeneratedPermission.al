@@ -33,5 +33,17 @@ permissionset 50000 GeneratedPermission
         page NIMPostedPOSEntries=X,
         page "NIMREST Log Card"=X,
         page "NIMREST Log List"=X,
-        page NIMPOSTokenSetup=X;
+        page NIMPOSTokenSetup=X,
+        tabledata "NIMError Message"=RIMD,
+        table "NIMError Message"=X,
+        report "NIM Delete Record"=X,
+        codeunit NIMCodGenJnlPost=X,
+        codeunit NIMCodNavigate=X,
+        codeunit NIMPOSCheckGenJnlLineBackgr=X,
+        codeunit POSEntriesValidate=X,
+        page "NIM Dimension Master"=X,
+        page "NIM G/L Master"=X,
+        page "NIM Location"=X,
+        page NIMPOSAPISetup=X,
+        query NIMQueryPOSEntry=X;
 }
