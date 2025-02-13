@@ -1,15 +1,15 @@
-page 50012 "NIM Dimension Master"
+page 50012 "NIM Dimension Value"
 {
     APIVersion = 'v2.0';
     APIPublisher = 'demo';
     APIGroup = 'Nisika';
-    EntityCaption = 'DimensionMaster';
-    EntitySetCaption = 'DimensionMasters';
+    EntityCaption = 'DimensionValue';
+    EntitySetCaption = 'DimensionValues';
     DelayedInsert = true;
     ODataKeyFields = "Dimension Code", Code;
     PageType = API;
-    EntityName = 'DimensionMaster';
-    EntitySetName = 'DimensionMasters';
+    EntityName = 'DimensionValue';
+    EntitySetName = 'DimensionValues';
     SourceTable = "Dimension Value";
     Extensible = true;
 
