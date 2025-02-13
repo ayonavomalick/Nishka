@@ -1,7 +1,7 @@
 codeunit 51100 NIMCodGenJnlPostLine
 {
 
-    local procedure UpdateTheDocumentInMagic(POSEntry: Record NIMPOSEntry)
+    local procedure UpdateTheDocumentInMagic(var POSEntry: Record NIMPOSEntry)
     var
         IsHandled: Boolean;
     begin

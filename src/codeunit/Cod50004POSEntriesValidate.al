@@ -29,11 +29,7 @@ codeunit 50004 POSEntriesValidate
     end;
 
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Check Gen. Jnl. Line. Backgr.", OnAfterCheckGenJnlLine, '', false, false)]
-    local procedure MyProcedure(var GenJnlLine: Record "Gen. Journal Line"; var TempErrorMessage: Record "Error Message" temporary)
-    begin
-        Error('Javed');
-    end;
+    
 
     var
         NIMPOSEntry: Record NIMPOSEntry;

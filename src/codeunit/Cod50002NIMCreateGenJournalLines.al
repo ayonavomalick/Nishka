@@ -34,6 +34,7 @@ codeunit 50002 NIMCreateGenJournalLines
             exit;
         Clear(QueryPOSEntry);
         GetGeneralLedgerSet();
+        DeleteGenJournalLines(QueryPOSEntry, GeneralLedgerSetup);
         if QueryPOSEntry.Open() then
             while QueryPOSEntry.Read() do
                 case QueryPOSEntry.Entry_Type of
@@ -47,12 +48,8 @@ codeunit 50002 NIMCreateGenJournalLines
                             POSEntry.SetRange("Document No.", QueryPOSEntry.Document_No_);
                             if not POSEntry.IsEmpty then
                                 if POSEntry.FindSet() then begin
-
                                     CreateSalesInvoiceGenJournalLines(POSEntry, GeneralLedgerSetup);
                                     Commit();
-                                    PostPOSEntries(QueryPOSEntry, POSAPIMgmnt);
-
-                                    ClearBackgroundPostingInfo(TempGenJournalLine);
                                 end;
                         end;
                     //Sale Return
@@ -261,7 +258,7 @@ codeunit 50002 NIMCreateGenJournalLines
                     //Daily Expense (POS)
                     QueryPOSEntry.Entry_Type::"Daily Expense (POS)":
                         begin
-                            DeleteGenJournalLines(QueryPOSEntry, GeneralLedgerSetup);
+                            //  DeleteGenJournalLines(QueryPOSEntry, GeneralLedgerSetup);
                             POSEntry.Reset();
                             POSEntry.SetRange("Entry Type", QueryPOSEntry.Entry_Type);
                             POSEntry.SetRange("Document Type", QueryPOSEntry.Document_Type);
@@ -271,17 +268,6 @@ codeunit 50002 NIMCreateGenJournalLines
 
                                     CreateDailyExpenseGenJournalLines(POSEntry, GeneralLedgerSetup);
                                     Commit();
-                                    /*    TempGenJournalLine.SetRange("Journal Template Name", TempGenJournalLine."Journal Template Name");
-                                        TempGenJournalLine.SetRange("Journal Batch Name", TempGenJournalLine."Journal Batch Name");
-                                        TempGenJournalLine.SetRange("Document No.", TempGenJournalLine."Document No.");
-                                        TempGenJournalLine.FindSet();
-                                        SetJobQueueStatus(TempGenJournalLine, TempGenJournalLine."Job Queue Status"::Posting);
-
-                                        if not CODEUNIT.Run(CODEUNIT::"Gen. Jnl.-Post Batch", TempGenJournalLine) then begin
-                                            SetJobQueueStatus(TempGenJournalLine, TempGenJournalLine."Job Queue Status"::Error);
-                                            Error(GetLastErrorText);
-                                        end else
-                                            POSAPIMgmnt.PostDocumentStatus(QueryPOSEntry.Document_No_); */
                                     PostPOSEntries(QueryPOSEntry, POSAPIMgmnt);
 
                                     ClearBackgroundPostingInfo(TempGenJournalLine);
@@ -901,7 +887,7 @@ codeunit 50002 NIMCreateGenJournalLines
         TempGenJournalLine.NIMPosEntry := true;
         TempGenJournalLine."Reference Document No." := POSEntry."Reference Document No.";
         TempGenJournalLine."Reference Line No." := POSEntry."Reference Line No.";
-        TempGenJournalLine.Insert();
+        TempGenJournalLine.Insert(false);
 
 
         OnAfterWOIssueInitGenJournalLines(POSEntry, GeneralLedgerSetup);
@@ -1000,7 +986,7 @@ codeunit 50002 NIMCreateGenJournalLines
     begin
     end;
 
-    local procedure CreateDailyExpenseGenJournalLines(POSEntry: Record NIMPOSEntry; GeneralLedgerSetup: Record "General Ledger Setup")
+    local procedure CreateDailyExpenseGenJournalLines(var POSEntry: Record NIMPOSEntry; GeneralLedgerSetup: Record "General Ledger Setup")
     var
         IsHandled: Boolean;
     begin
@@ -1083,7 +1069,7 @@ codeunit 50002 NIMCreateGenJournalLines
     end;
 
 
-    local procedure DailyExpenseInitGenJournalLines(POSEntry: Record NIMPOSEntry; GeneralLedgerSetup: Record "General Ledger Setup")
+    local procedure DailyExpenseInitGenJournalLines(var POSEntry: Record NIMPOSEntry; GeneralLedgerSetup: Record "General Ledger Setup")
     var
         DimensionManagement: Codeunit DimensionManagement;
         NextLines: Integer;
@@ -1113,7 +1099,7 @@ codeunit 50002 NIMCreateGenJournalLines
         TempGenJournalLine.NIMPosEntry := true;
         TempGenJournalLine."Reference Document No." := POSEntry."Reference Document No.";
         TempGenJournalLine."Reference Line No." := POSEntry."Reference Line No.";
-        TempGenJournalLine.Insert();
+        TempGenJournalLine.Insert(false);
 
 
         OnAfterDailyExpenseInitGenJournalLines(POSEntry, GeneralLedgerSetup);
@@ -1210,7 +1196,7 @@ codeunit 50002 NIMCreateGenJournalLines
         OnAfterCreateSalesInvoiceGenJournalLines(POSEntry, GeneralLedgerSetup);
     end;
 
-    local procedure CreateSalesReturnGenJournalLines(POSEntry: Record NIMPOSEntry; GeneralLedgerSetup: Record "General Ledger Setup")
+    local procedure CreateSalesReturnGenJournalLines(var POSEntry: Record NIMPOSEntry; GeneralLedgerSetup: Record "General Ledger Setup")
     var
         IsHandled: Boolean;
     begin
@@ -1237,14 +1223,14 @@ codeunit 50002 NIMCreateGenJournalLines
         TempGenJournalLine.Reset();
         TempGenJournalLine.SetRange("Journal Template Name", GeneralLedgerSetup."Journal Template Name");
         TempGenJournalLine.SetRange("Journal Batch Name", GeneralLedgerSetup."Journal Batch Name");
-        TempGenJournalLine.DeleteAll();
+        TempGenJournalLine.DeleteAll(false);
 
-        TempGenJournalLine.Reset();
-        TempGenJournalLine.SetRange("Journal Template Name", GeneralLedgerSetup."Journal Template Name");
-        TempGenJournalLine.SetRange("Journal Batch Name", GeneralLedgerSetup."Journal Batch Name");
-        TempGenJournalLine.SetRange("Document Type", QueryPOSEntry.Document_Type);
-        TempGenJournalLine.SetRange("Document No.", QueryPOSEntry.Document_No_);
-        TempGenJournalLine.DeleteAll();
+        // TempGenJournalLine.Reset();
+        // TempGenJournalLine.SetRange("Journal Template Name", GeneralLedgerSetup."Journal Template Name");
+        // TempGenJournalLine.SetRange("Journal Batch Name", GeneralLedgerSetup."Journal Batch Name");
+        // TempGenJournalLine.SetRange("Document Type", QueryPOSEntry.Document_Type);
+        // TempGenJournalLine.SetRange("Document No.", QueryPOSEntry.Document_No_);
+        // TempGenJournalLine.DeleteAll(false);
 
         OnAfterDeleteGenJournalLines(QueryPOSEntry, GeneralLedgerSetup);
     end;
@@ -1500,7 +1486,7 @@ codeunit 50002 NIMCreateGenJournalLines
         TempGenJournalLine.NIMPosEntry := true;
         TempGenJournalLine."Reference Document No." := POSEntry."Reference Document No.";
         TempGenJournalLine."Reference Line No." := POSEntry."Reference Line No.";
-        TempGenJournalLine.Insert();
+        TempGenJournalLine.Insert(false);
 
 
 
@@ -1508,16 +1494,16 @@ codeunit 50002 NIMCreateGenJournalLines
         OnAfterSalesInvoiceInitGenJournalLines(POSEntry, GeneralLedgerSetup);
     end;
 
-    local procedure SalesReturnInitGenJournalLines(POSEntry: Record NIMPOSEntry; GeneralLedgerSetup: Record "General Ledger Setup")
+    local procedure SalesReturnInitGenJournalLines(var POSEntry: Record NIMPOSEntry; GeneralLedgerSetup: Record "General Ledger Setup")
     var
-        DimensionManagement: Codeunit DimensionManagement;
+        
         NextLines: Integer;
         IsHandled: Boolean;
     begin
         OnBeforeSalesReturnInitGenJournalLines(POSEntry, GeneralLedgerSetup, IsHandled);
         if IsHandled then
             exit;
-        NextLines := 0;
+        
         NextLines := GetNextLineNo(GeneralLedgerSetup);
         TempGenJournalLine.init();
         TempGenJournalLine."Journal Template Name" := GeneralLedgerSetup."Journal Template Name";

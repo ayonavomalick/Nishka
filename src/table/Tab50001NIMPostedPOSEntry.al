@@ -143,53 +143,53 @@ table 50001 "NIMPostedPOSEntry"
 
 
         }
-        field(23; "Posted Status"; Enum "Posted Status")
+        field(29; "Posted Status"; Enum "Posted Status")
         {
             DataClassification = CustomerContent;
             caption = 'Posted Status';
         }
-        field(24; "Magic Status"; Text[10])
+        field(30; "Magic Status"; Text[10])
         {
             DataClassification = CustomerContent;
             caption = 'Magic Status';
         }
-        field(25; "Magic Id"; Text[10])
+        field(31; "Magic Id"; Text[10])
         {
             DataClassification = CustomerContent;
             caption = 'Magic Id';
         }
-        field(26; "Magic Trans Type"; Text[10])
+        field(32; "Magic Trans Type"; Text[10])
         {
             DataClassification = CustomerContent;
             caption = 'Magic Trans Type';
         }
-        field(27; "Magic Created Date"; Text[30])
+        field(33; "Magic Created Date"; Text[30])
         {
             DataClassification = CustomerContent;
             caption = 'Magic Created Date';
         }
-        field(28; "Shortcut Dimension 5"; code[20])
+        field(24; "Shortcut Dimension 5"; code[20])
         {
             CaptionClass = '1,2,5';
             TableRelation = "Dimension Value".Code where("Global Dimension No." = const(5),
                                                                   "Dimension Value Type" = const(Standard),
                                                                   Blocked = const(false));
         }
-        field(29; "Shortcut Dimension 6"; code[20])
+        field(25; "Shortcut Dimension 6"; code[20])
         {
             CaptionClass = '1,2,6';
             TableRelation = "Dimension Value".Code where("Global Dimension No." = const(6),
                                                                   "Dimension Value Type" = const(Standard),
                                                                   Blocked = const(false));
         }
-        field(30; "Shortcut Dimension 7"; code[20])
+        field(26; "Shortcut Dimension 7"; code[20])
         {
             CaptionClass = '1,2,7';
             TableRelation = "Dimension Value".Code where("Global Dimension No." = const(7),
                                                                   "Dimension Value Type" = const(Standard),
                                                                   Blocked = const(false));
         }
-        field(31; "Shortcut Dimension 8"; code[20])
+        field(27; "Shortcut Dimension 8"; code[20])
         {
             CaptionClass = '1,2,8';
             TableRelation = "Dimension Value".Code where("Global Dimension No." = const(8),
